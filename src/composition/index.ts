@@ -1,5 +1,5 @@
 import { Bill, Categories } from "@/types";
-import { DataType, handleCSV } from "@/utils/handle";
+import { DataType, csvHelper } from "@/utils/helper";
 
 let bill: Bill[];
 let categories: Categories[];
@@ -11,7 +11,7 @@ export function useBill(): Promise<Bill[]> {
     if (!bill) {
       const billPromise = import("@/model/bill.csv?raw");
       billPromise.then(res => {
-        bill = handleCSV(res.default, billType);
+        bill = csvHelper(res.default, billType);
         resolve(bill);
       }).catch(e => {
         reject(e);

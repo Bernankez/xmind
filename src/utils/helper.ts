@@ -5,7 +5,7 @@ export type DataType = Map<string, "number" | "string" | "Date">
  * @param csv
  * @param dataType
  */
-export function handleCSV(csv: string, dataType?: DataType) {
+export function csvHelper(csv: string, dataType?: DataType) {
   const list = csv.split("\r\n");
   const fields = list.length > 0 ? list.shift()!.split(",") : [];
   return list.map((val) => {

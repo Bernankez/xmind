@@ -1,5 +1,28 @@
-<template>Welcome</template>
+<template>
+  <div class="page">
+    <ElForm :model="form"></ElForm>
+    <ElTable :data="table" fit>
 
-<script setup lang="ts"></script>
+    </ElTable>
+  </div>
+</template>
 
-<style lang="scss" scoped></style>
+<script setup lang="ts">
+import { ElTable, ElForm } from "element-plus";
+import { reactive, ref } from "vue";
+import { useBill } from "@/composition";
+
+const form = reactive({
+  month: ""
+});
+const table = ref([]);
+useBill().then(res => {
+  console.log(res);
+});
+</script>
+
+<style lang="scss" scoped>
+.page {
+
+}
+</style>

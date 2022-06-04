@@ -20,7 +20,11 @@
           {{ dayjs(row.time).format("YYYY-MM-DD HH:mm:ss") }}
         </template>
       </ElTableColumn>
-      <ElTableColumn label="账单类型" prop="type" align="center"></ElTableColumn>
+      <ElTableColumn label="账单类型" prop="type" align="center">
+        <template #default="{row}">
+          {{ row.type === 1 ? "收入" : row.type === 0 ? "支出" : row.type }}
+        </template>
+      </ElTableColumn>
       <ElTableColumn label="账单分类" prop="category" align="center">
         <template #default="{row}">
           {{ row.categoryInfo?.name || row.category }}

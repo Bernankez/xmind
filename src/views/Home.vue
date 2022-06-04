@@ -26,12 +26,17 @@
           {{ row.categoryInfo?.name || row.category }}
         </template>
       </ElTableColumn>
-      <ElTableColumn label="账单金额" prop="amount" align="center">
+      <ElTableColumn label="账单金额" prop="amount" align="center" sortable>
         <template #default="{row}">
           ¥{{ row.amount.toFixed(2) }}
         </template>
       </ElTableColumn>
     </ElTable>
+    <div class="total">
+      合计：
+      <span>收入：{{ (total.incoming).toFixed(2) }}</span>
+      <span>支出：{{ (total.expense).toFixed(2) }}</span>
+    </div>
   </div>
   <ElDialog v-model="showAddBill" title="添加账单" width="600px" draggable destroy-on-close
             @close="addBillClose">
@@ -51,7 +56,7 @@
         </ElSelect>
       </ElFormItem>
       <ElFormItem label="账单金额" prop="amount">
-        <ElInput v-model.number="formBill.amount"></ElInput>
+        <ElInput v-model="formBill.amount"></ElInput>
       </ElFormItem>
     </ElForm>
     <template #footer>
@@ -81,6 +86,7 @@ import { getBillByInfo, addBill as addBillApi } from "@/service";
 import { Bill, BillWithCategory, Category } from "@/types";
 import dayjs from "dayjs";
 import { useCategory } from "@/composition";
+import currency from "currency.js";
 
 const form = reactive({
   month: "",
@@ -100,6 +106,21 @@ useCategory().then(res => {
   categories.value = res;
 });
 const table = ref<BillWithCategory[]>([]);
+const total = computed(() => {
+  let incoming = 0;
+  let expense = 0;
+  table.value.forEach(bill => {
+    if (bill.type === 1) {
+      incoming = currency(incoming).add(bill.amount).value;
+    } else if (bill.type === 0) {
+      expense = currency(expense).add(bill.amount).value;
+    }
+  });
+  return {
+    incoming,
+    expense
+  };
+});
 const query = () => {
   getBillByInfo(form).then(res => {
     table.value = res;
@@ -111,7 +132,8 @@ const formBillEl = ref<FormInstance>();
 const onAddBill = () => {
   formBillEl.value?.validate((valid) => {
     if (valid) {
-      addBillApi(formBill);
+      const { amount, ...temp } = formBill;
+      addBillApi({ ...temp, amount: Number(amount) });
       showAddBill.value = false;
       query();
     }
@@ -131,7 +153,7 @@ const rules = {
     type: [{ required: true, message: "请选择账单类型", trigger: "change" }],
     amount: [{
       required: true, validator: (rule, val, cb) => {
-        if (/^([1-9]\d*|0)(\.\d{1,2})?$/g.test(val)) {
+        if (/^(-)?([1-9]\d*|0)(\.\d{1,2})?$/g.test(val)) {
           cb();
         } else {
           cb(new Error("请输入正确金额"));
@@ -145,6 +167,16 @@ query();
 
 <style lang="scss" scoped>
 .page {
+  padding: 20px;
+  box-sizing: border-box;
+}
 
+.total {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px 0;
+  box-sizing: border-box;
+  color: #333;
+  font-size: 16px;
 }
 </style>

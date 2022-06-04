@@ -16,17 +16,21 @@
     <ElTable :data="table" fit>
       <ElTableColumn type="index" label="序号" width="80" align="center"></ElTableColumn>
       <ElTableColumn label="账单时间" prop="time" align="center">
-        <template v-slot="{row}">
+        <template #default="{row}">
           {{ dayjs(row.time).format("YYYY-MM-DD HH:mm:ss") }}
         </template>
       </ElTableColumn>
       <ElTableColumn label="账单类型" prop="type" align="center"></ElTableColumn>
       <ElTableColumn label="账单分类" prop="category" align="center">
-        <template v-slot="{row}">
+        <template #default="{row}">
           {{ row.categoryInfo?.name || row.category }}
         </template>
       </ElTableColumn>
-      <ElTableColumn label="账单金额" prop="amount" align="center"></ElTableColumn>
+      <ElTableColumn label="账单金额" prop="amount" align="center">
+        <template #default="{row}">
+          ¥{{ row.amount.toFixed(2) }}
+        </template>
+      </ElTableColumn>
     </ElTable>
   </div>
   <ElDialog v-model="showAddBill" title="添加账单" width="600px" draggable destroy-on-close
@@ -36,14 +40,14 @@
         <ElDatePicker v-model="formBill.time" type="datetime" />
       </ElFormItem>
       <ElFormItem label="账单类型" prop="type">
-        <ElSelect v-model="formBill.type">
+        <ElSelect v-model="formBill.type" @change="resetCategory">
           <ElOption label="收入" :value="1" />
           <ElOption label="支出" :value="0" />
         </ElSelect>
       </ElFormItem>
-      <ElFormItem label="账单分类" prop="category">
+      <ElFormItem ref="categoryEl" label="账单分类" prop="category">
         <ElSelect v-model="formBill.category">
-          <ElOption v-for="cate in categories" :key="cate.id" :value="cate.id" :label="cate.name" />
+          <ElOption v-for="cate in addCategories" :key="cate.id" :value="cate.id" :label="cate.name" />
         </ElSelect>
       </ElFormItem>
       <ElFormItem label="账单金额" prop="amount">
@@ -68,9 +72,11 @@ import {
   ElOption,
   ElDatePicker,
   ElFormItem,
-  ElTableColumn, FormInstance
+  ElTableColumn,
+  FormInstance,
+  FormItemInstance
 } from "element-plus";
-import { reactive, ref } from "vue";
+import { reactive, ref, computed } from "vue";
 import { getBillByInfo, addBill as addBillApi } from "@/service";
 import { Bill, BillWithCategory, Category } from "@/types";
 import dayjs from "dayjs";
@@ -81,6 +87,15 @@ const form = reactive({
   category: ""
 });
 const categories = ref<Category[]>([]);
+const addCategories = computed(() => {
+  return categories.value.filter(cate => {
+    return cate.type === formBill.type;
+  });
+});
+const categoryEl = ref<FormItemInstance>();
+const resetCategory = () => {
+  categoryEl.value?.resetField();
+};
 useCategory().then(res => {
   categories.value = res;
 });

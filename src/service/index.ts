@@ -41,15 +41,19 @@ export function getBillByInfo(options?: { month: string, category: string }) {
   });
 }
 
+export function addBill(bill: Bill) {
+  return addBillLocally(bill);
+}
 
 const KEY_BILL = "data-bill";
 
 function addBillLocally(bill: Bill) {
-  let billList = JSON.parse(localStorage.getItem(KEY_BILL) as string) || [];
-  billList.concat(bill);
+  let billList = getBillLocally();
+  billList = billList.concat(bill);
+  localStorage.setItem(KEY_BILL, JSON.stringify(billList));
   return true;
 }
 
 function getBillLocally(): Bill[] {
-  return JSON.parse(localStorage.getItem(KEY_BILL) as string) || [];
+  return JSON.parse(localStorage.getItem(KEY_BILL) || "[]");
 }

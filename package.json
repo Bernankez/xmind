@@ -10,7 +10,7 @@
   "dependencies": {
     "currency.js": "^2.0.4",
     "dayjs": "^1.11.2",
-    "element-plus": "^2.2.2",
+    "element-plus": "2.2.0",
     "pinia": "^2.0.13",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14"

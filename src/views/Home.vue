@@ -38,8 +38,8 @@
     </ElTable>
     <div class="total">
       合计：
-      <span>收入：{{ (total.incoming).toFixed(2) }}</span>
-      <span>支出：{{ (total.expense).toFixed(2) }}</span>
+      <span>收入：¥{{ (total.incoming).toFixed(2) }}</span>
+      <span>支出：¥{{ (total.expense).toFixed(2) }}</span>
     </div>
   </div>
   <ElDialog v-model="showAddBill" title="添加账单" width="600px" draggable destroy-on-close

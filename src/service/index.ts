@@ -1,4 +1,4 @@
-import { useBill, useCategory } from "@/composition";
+import { useBill, useCategory } from "@/composables";
 import { Bill, BillWithCategory } from "@/types";
 import { categoryHelper } from "@/utils/helper";
 import dayjs from "dayjs";

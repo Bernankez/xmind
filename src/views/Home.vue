@@ -89,7 +89,7 @@ import { reactive, ref, computed } from "vue";
 import { getBillByInfo, addBill as addBillApi } from "@/service";
 import { Bill, BillWithCategory, Category } from "@/types";
 import dayjs from "dayjs";
-import { useCategory } from "@/composition";
+import { useCategory } from "@/composables";
 import currency from "currency.js";
 
 const form = reactive({

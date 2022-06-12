@@ -332,7 +332,7 @@ packages:
       normalize-wheel-es: 1.1.2
       vue: 3.2.33
     transitivePeerDependencies:
-      - '@vue/composition-api'
+      - '@vue/composables-api'
     dev: false
 
   /es-module-lexer/0.10.5:

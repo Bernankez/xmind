@@ -21,6 +21,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.TOKEN }}
-          REPOSITORY_NAME: Bernankez/bernankez.github.io.git
+          REPOSITORY_NAME: Bernankez/bernankez.github.io
           BRANCH: master
           FOLDER: dist
